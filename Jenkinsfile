@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    environment {
+        // Define environment variables if needed
+        NODE_HOME = tool 'NodeJS'
+        PATH = "${NODE_HOME}/bin:${PATH}"
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -9,19 +15,20 @@ pipeline {
             }
         }
 
+        stage('Install Dependencies') {
+            steps {
+                // Install npm dependencies
+                script {
+                    sh 'npm install'
+                }
+            }
+        }
+
         stage('Build') {
             steps {
-                // Install dependencies and build the React app
+                // Build the React app
                 script {
-                    // Use Node.js and npm from the environment or specify the paths
-                    def npmCommand = 'npm'
-                    def nodeCommand = 'node'
-
-                    // Install dependencies
-                    sh "${npmCommand} install"
-
-                    // Build the React app
-                    sh "${npmCommand} run build"
+                    sh 'npm run build'
                 }
             }
         }
